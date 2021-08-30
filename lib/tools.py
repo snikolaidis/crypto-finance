@@ -16,14 +16,14 @@ def getThePrice(arrayOfPrices, method = "avg"):
 
     return round(finalPrice, 6)
 
-def calculateMonthlyRepeatedInvestment(coin, monthly_invest = 500, yearly_perc_increase = 20, method = "avg"):
+def calculateMonthlyRepeatedInvestment(coin, monthly_invest = 500, yearly_perc_increase = 20, method = "avg", initial_amount = 0):
     print("")
     print("Coin: " + coin["code"].upper())
     print("Coin price at 12/2021: " + "$ {:,.2f}".format(getThePrice(coin["end_of_2021"], method)))
 
-    totalProfit = 0
+    totalProfit = initial_amount
     previous_value = getThePrice(coin["end_of_2021"], method)
-    totalInvest = 0
+    totalInvest = initial_amount
     monthyInvest = monthly_invest
 
     for year in range(2022, 2029):

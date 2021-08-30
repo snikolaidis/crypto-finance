@@ -9,7 +9,13 @@ spec.loader.exec_module(tools)
 
 myCoins = data_coins.myCoins()
 
-finalInvest, finalAmount = tools.calculateMonthlyRepeatedInvestment(myCoins["btc"], 500, 25)
+finalInvest, finalAmount = tools.calculateMonthlyRepeatedInvestment(
+    coin = myCoins["btc"],
+    monthly_invest = 600,
+    yearly_perc_increase = 20,
+    method = "avg",
+    initial_amount = 8700
+)
 
 print("")
 print("Total invest : " + "$ {:,.2f}".format(finalInvest))
