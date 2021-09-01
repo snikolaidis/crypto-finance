@@ -81,3 +81,6 @@ class Database:
             print("Database upgrade completed")
         else:
             print("Database is in latest version")
+
+    def showSettings(self):
+        print('Hello from SHOW SETTINGS')

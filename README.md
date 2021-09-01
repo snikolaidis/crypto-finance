@@ -18,5 +18,8 @@ So, this project says the following:
 
 What if I invest a specific amount every month for the following years on a specific coin (or coins)? What will be my total investment and the total outcome?
 
+## Libraries
+pip install simple_chalk
+
 -----
 _Last update: 26 Ayg 2021_
