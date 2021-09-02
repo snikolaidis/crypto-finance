@@ -14,7 +14,10 @@ class Database:
         print("Connecting to database")
         self.conn = sqlite3.connect('./database/database.db')
 
+    # Commit all pending changes
+    # Close the connection
     def disconnect(self):
+        self.conn.commit()
         self.conn.close()
 
     def getVersion(self):
@@ -83,4 +86,7 @@ class Database:
             print("Database is in latest version")
 
     def showSettings(self):
-        print('Hello from SHOW SETTINGS')
+        print('ToDo: showSettings')
+
+    def modifySettings(self):
+        print('ToDo: modifySettings')

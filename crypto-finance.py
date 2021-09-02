@@ -1,26 +1,25 @@
 #!/usr/bin/python3
 
-# Import libraries
+# System libraries
 import sys
 import importlib.util
 from simple_chalk import chalk
+
+# Custom libraries
 from lib import globals
+from lib import database
+from lib import finance
+from lib import misc
 
-def callTheLibFiles():
-    spec = importlib.util.spec_from_file_location("coins", "./lib/database.py")
-    databaseClass = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(databaseClass)
-    globals.database = databaseClass.Database()
-
-    spec = importlib.util.spec_from_file_location("coins", "./lib/misc.py")
-    miscClass = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(miscClass)
-    globals.misc = miscClass.Misc()
+def initTheLibraries():
+    globals.database = database.Database()
+    globals.finance = finance.Finance()
+    globals.misc = misc.Misc()
 
 def main():
     globals.misc.doTheMenuLoop()
 
 # Starting the app
 globals.init()
-callTheLibFiles()
+initTheLibraries()
 main()
