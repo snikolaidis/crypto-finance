@@ -10,11 +10,13 @@ from lib import globals
 from lib import database
 from lib import finance
 from lib import misc
+from lib import tools
 
 def initTheLibraries():
     globals.database = database.Database()
     globals.finance = finance.Finance()
     globals.misc = misc.Misc()
+    globals.tools = tools.Tools()
 
 def main():
     globals.misc.doTheMenuLoop()

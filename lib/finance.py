@@ -1,3 +1,7 @@
+from requests import NullHandler
+from lib import globals
+from simple_chalk import chalk
+
 class Finance:
 
     def calculateMonthlyRepeatedInvestment(coin, monthly_invest = 500, yearly_perc_increase = 20, method = "avg", initial_amount = 0):
@@ -38,8 +42,34 @@ class Finance:
         return totalInvest, totalProfit
 
 
+    def getCoinsSupported(self):
+        coins = globals.database.getSupportedCoins()
+        for coin in coins:
+            print(coin[1] + ' (' + chalk.green(coin[2]) + ')')
+            if coin[3] is not None:
+                print("  Price: " + chalk.green('{:,}'.format(coin[3])))
+            if coin[4] is not None:
+                print("  Date: " + chalk.green(coin[4]))
+
+    def updateCoinsSupported(self):
+        if globals.tools.updatePricesFromNomics() == False:
+            print("There was an error while updating the system, please check and make sure you have the key " + chalk.green("nomics") + " configured in the settings.")
+        else:
+            print("All coins are updated.")
+
+    def generateRandomPricesFor(self, coin):
+        print('ToDo: generateRandomPricesFor', coin)
+
+
+    # ToDo
     def predictionsAndInvestments(self, coin):
         print('ToDo: predictionsAndInvestments', coin)
 
     def predictionsAndInvestmentsManyCoins(self):
         print('ToDo: predictionsAndInvestmentsManyCoins')
+
+    def predictionsAndInvestmentsFictionalCoin(self):
+        print('ToDo: predictionsAndInvestmentsFictionalCoin')
+
+    def generateCustomRandomPrices(self):
+        print('ToDo: generateCustomRandomPrices')

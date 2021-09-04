@@ -52,7 +52,8 @@ class Misc:
                 else:
                     eval('globals.' + module + '.' + task)()
                 print()
-                input("Press enter to return to previous menu.")
+                print("---------------------------------------")
+                input("Press [Enter] to return to previous menu.")
 
     # Menu options:
     # key: keyboard key
@@ -65,22 +66,27 @@ class Misc:
 
         if menu == 'settings':
             print('SETTINGS:')
-            print(chalk.greenBright('1.') + ' Show settings')
-            print(chalk.greenBright('2.') + ' Add/Modify entry')
+            print(chalk.greenBright('1.') + ' Coins supported')
+            print(chalk.greenBright('2.') + ' Update supported coins')
+            print(chalk.greenBright('3.') + ' Show settings')
+            print(chalk.greenBright('4.') + ' Add/Modify entry')
             print()
             print(chalk.greenBright('X.') + ' Return to main menu')
             accepted_options = [
-                {"key": "1", "value": "task:database:showSettings"},
-                {"key": "2", "value": "task:database:modifySettings"},
+                {"key": "1", "value": "task:finance:getCoinsSupported"},
+                {"key": "2", "value": "task:finance:updateCoinsSupported"},
+                {"key": "3", "value": "task:database:showSettings"},
+                {"key": "4", "value": "task:database:setSettings"},
                 {"key": "x", "value": "menu:main"},
             ]
         elif menu == 'predictionsAndInvestments':
             print('PREDICTIONS AND INVESTMENTS:')
-            print(chalk.greenBright('1.') + ' Invest in Bitcoin (BTC)')
-            print(chalk.greenBright('2.') + ' Invest in Ethereum (ETH)')
-            print(chalk.greenBright('3.') + ' Invest in Cardano (ADA)')
-            print(chalk.greenBright('4.') + ' Invest in Binance Coin (BNB)')
-            print(chalk.greenBright('5.') + ' Invest in many coins')
+            print(chalk.greenBright('1.') + ' Predict investment in Bitcoin (BTC)')
+            print(chalk.greenBright('2.') + ' Predict investment in Ethereum (ETH)')
+            print(chalk.greenBright('3.') + ' Predict investment in Cardano (ADA)')
+            print(chalk.greenBright('4.') + ' Predict investment in Binance Coin (BNB)')
+            print(chalk.greenBright('5.') + ' Predict investment in many coins')
+            print(chalk.greenBright('6.') + ' Predict investment in fictional coin')
             print()
             print(chalk.greenBright('X.') + ' Return to main menu')
             accepted_options = [
@@ -89,17 +95,37 @@ class Misc:
                 {"key": "3", "value": "task:finance:predictionsAndInvestments:'ada'"},
                 {"key": "4", "value": "task:finance:predictionsAndInvestments:'bnb'"},
                 {"key": "5", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
+                {"key": "5", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
+                {"key": "x", "value": "menu:main"},
+            ]
+        elif menu == 'generateRandomPrices':
+            print('GENERATE RANDOM PRICES:')
+            print(chalk.greenBright('1.') + ' Generate random prices for Bitcoin (BTC)')
+            print(chalk.greenBright('2.') + ' Generate random prices for Ethereum (ETH)')
+            print(chalk.greenBright('3.') + ' Generate random prices for Cardano (ADA)')
+            print(chalk.greenBright('4.') + ' Generate random prices for Binance Coin (BNB)')
+            print(chalk.greenBright('5.') + ' Generate custom random prices')
+            print()
+            print(chalk.greenBright('X.') + ' Return to main menu')
+            accepted_options = [
+                {"key": "1", "value": "task:finance:generateRandomPricesFor:'btc'"},
+                {"key": "2", "value": "task:finance:generateRandomPricesFor:'eth'"},
+                {"key": "3", "value": "task:finance:generateRandomPricesFor:'ada'"},
+                {"key": "4", "value": "task:finance:generateRandomPricesFor:'bnb'"},
+                {"key": "5", "value": "task:finance:generateCustomRandomPrices"},
                 {"key": "x", "value": "menu:main"},
             ]
         else:
             print('MAIN MENU:')
             print(chalk.greenBright('1.') + ' Predictions and Investments')
+            print(chalk.greenBright('2.') + ' Generate random prices')
             print(chalk.greenBright('S.') + ' Settings')
             print(chalk.greenBright('A.') + ' About')
             print()
             print(chalk.greenBright('X.') + ' Exit')
             accepted_options = [
                 {"key": "1", "value": "menu:predictionsAndInvestments"},
+                {"key": "2", "value": "menu:generateRandomPrices"},
                 {"key": "s", "value": "menu:settings"},
                 {"key": "a", "value": "task:misc:showAbout"},
                 {"key": "x", "value": "_exit"},
@@ -137,7 +163,11 @@ class Misc:
             "\n" +
             "Now that we clarified that, let's go back to what I was saying: I like crypto currencies. In the same time, it was time to start learning python; I didn't have the luxury of using it earlier and now, as it looks like, it was time to do so.\n" +
             "\n" +
+            "And while trying to figure out what projects to work on, I thought that writing something that has to do with crypto currencies would be awesome. Of course, everyrhing here is purely fictional. Just to make it clear. And it's actually playing with numbers. Not actual data. At least for now, I'm planning to add some real data, like taking the current price of crypto currencies etc.\n" +
             "\n" +
-            "\n"
+            "But that's all for now. Let's go back to work.\n" +
+            "\n" +
+            "Thank you,\n" +
+            chalk.green("Stratos Nikolaidis")
         )
 
