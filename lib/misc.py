@@ -4,13 +4,13 @@ from lib import globals
 
 class Misc:
 
-    version = "0.1"
+    version = "02.09.04.007"
 
     # def __init__(self):
 
     def showTheTitle(self):
-        print(chalk.redBright('CryptoFinance') + ' - A finanfial tool for cryptocurrencies, ver.' + self.version)
-        print(chalk.greenBright('=============================================================='))
+        print(chalk.redBright('CryptoFinance') + ' - A finanfial tool for cryptocurrencies, ' + chalk.greenBright('ver.' + self.version))
+        print(chalk.greenBright('======================================================================='))
         print()
 
     def doTheMenuLoop(self):
@@ -66,70 +66,51 @@ class Misc:
 
         if menu == 'settings':
             print('SETTINGS:')
-            print(chalk.greenBright('1.') + ' Coins supported')
-            print(chalk.greenBright('2.') + ' Update supported coins')
-            print(chalk.greenBright('3.') + ' Show settings')
-            print(chalk.greenBright('4.') + ' Add/Modify entry')
-            print()
-            print(chalk.greenBright('X.') + ' Return to main menu')
             accepted_options = [
-                {"key": "1", "value": "task:finance:getCoinsSupported"},
-                {"key": "2", "value": "task:finance:updateCoinsSupported"},
-                {"key": "3", "value": "task:database:showSettings"},
-                {"key": "4", "value": "task:database:setSettings"},
-                {"key": "x", "value": "menu:main"},
+                {"key": "1", "title": "Coins supported", "value": "task:finance:getCoinsSupported"},
+                {"key": "2", "title": "Update supported coins", "value": "task:finance:updateCoinsSupported"},
+                {"key": "3", "title": "Show settings", "value": "task:database:showSettings"},
+                {"key": "4", "title": "Add/Modify entry", "value": "task:database:setSettings"},
             ]
         elif menu == 'predictionsAndInvestments':
             print('PREDICTIONS AND INVESTMENTS:')
-            print(chalk.greenBright('1.') + ' Predict investment in Bitcoin (BTC)')
-            print(chalk.greenBright('2.') + ' Predict investment in Ethereum (ETH)')
-            print(chalk.greenBright('3.') + ' Predict investment in Cardano (ADA)')
-            print(chalk.greenBright('4.') + ' Predict investment in Binance Coin (BNB)')
-            print(chalk.greenBright('5.') + ' Predict investment in many coins')
-            print(chalk.greenBright('6.') + ' Predict investment in fictional coin')
-            print()
-            print(chalk.greenBright('X.') + ' Return to main menu')
             accepted_options = [
-                {"key": "1", "value": "task:finance:predictionsAndInvestments:'btc'"},
-                {"key": "2", "value": "task:finance:predictionsAndInvestments:'eth'"},
-                {"key": "3", "value": "task:finance:predictionsAndInvestments:'ada'"},
-                {"key": "4", "value": "task:finance:predictionsAndInvestments:'bnb'"},
-                {"key": "5", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
-                {"key": "5", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
-                {"key": "x", "value": "menu:main"},
+                {"key": "1", "title": "Predict investment in Bitcoin (BTC)", "value": "task:finance:predictionsAndInvestments:'btc'"},
+                {"key": "2", "title": "Predict investment in Ethereum (ETH)", "value": "task:finance:predictionsAndInvestments:'eth'"},
+                {"key": "3", "title": "Predict investment in Cardano (ADA)", "value": "task:finance:predictionsAndInvestments:'ada'"},
+                {"key": "4", "title": "Predict investment in Binance Coin (BNB)", "value": "task:finance:predictionsAndInvestments:'bnb'"},
+                {"key": "5", "title": "Predict investment in many coins", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
+                {"key": "6", "title": "Predict investment in fictional coin", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
             ]
         elif menu == 'generateRandomPrices':
             print('GENERATE RANDOM PRICES:')
-            print(chalk.greenBright('1.') + ' Generate random prices for Bitcoin (BTC)')
-            print(chalk.greenBright('2.') + ' Generate random prices for Ethereum (ETH)')
-            print(chalk.greenBright('3.') + ' Generate random prices for Cardano (ADA)')
-            print(chalk.greenBright('4.') + ' Generate random prices for Binance Coin (BNB)')
-            print(chalk.greenBright('5.') + ' Generate custom random prices')
-            print()
-            print(chalk.greenBright('X.') + ' Return to main menu')
             accepted_options = [
-                {"key": "1", "value": "task:finance:generateRandomPricesFor:'btc'"},
-                {"key": "2", "value": "task:finance:generateRandomPricesFor:'eth'"},
-                {"key": "3", "value": "task:finance:generateRandomPricesFor:'ada'"},
-                {"key": "4", "value": "task:finance:generateRandomPricesFor:'bnb'"},
-                {"key": "5", "value": "task:finance:generateCustomRandomPrices"},
-                {"key": "x", "value": "menu:main"},
+                {"key": "1", "title": "Generate random prices for Bitcoin (BTC)", "value": "task:finance:generateRandomPricesFor:'btc'"},
+                {"key": "2", "title": "Generate random prices for Ethereum (ETH)", "value": "task:finance:generateRandomPricesFor:'eth'"},
+                {"key": "3", "title": "Generate random prices for Cardano (ADA)", "value": "task:finance:generateRandomPricesFor:'ada'"},
+                {"key": "4", "title": "Generate random prices for Binance Coin (BNB)", "value": "task:finance:generateRandomPricesFor:'bnb'"},
+                {"key": "5", "title": "Generate custom random prices", "value": "task:finance:generateCustomRandomPrices"},
             ]
         else:
             print('MAIN MENU:')
-            print(chalk.greenBright('1.') + ' Predictions and Investments')
-            print(chalk.greenBright('2.') + ' Generate random prices')
-            print(chalk.greenBright('S.') + ' Settings')
-            print(chalk.greenBright('A.') + ' About')
-            print()
-            print(chalk.greenBright('X.') + ' Exit')
             accepted_options = [
-                {"key": "1", "value": "menu:predictionsAndInvestments"},
-                {"key": "2", "value": "menu:generateRandomPrices"},
-                {"key": "s", "value": "menu:settings"},
-                {"key": "a", "value": "task:misc:showAbout"},
-                {"key": "x", "value": "_exit"},
+                {"key": "1", "title": "Predictions and Investments", "value": "menu:predictionsAndInvestments"},
+                {"key": "2", "title": "Generate random prices", "value": "menu:generateRandomPrices"},
+                {"key": "s", "title": "Settings", "value": "menu:settings"},
+                {"key": "a", "title": "About", "value": "task:misc:showAbout"},
             ]
+        
+        for option in accepted_options:
+            print(chalk.greenBright('[' + option['key'].upper() + '] ') + option['title'])
+
+        print()
+
+        if menu == 'main':
+            print(chalk.greenBright('[X] ') + ' Exit')
+            accepted_options.append({"key": "x", "value": "_exit"})
+        else:
+            print(chalk.greenBright('[X] ') + ' Return to main menu')
+            accepted_options.append({"key": "x", "value": "menu:main"})
 
         while True:
             print()

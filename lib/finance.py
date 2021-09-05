@@ -1,3 +1,4 @@
+import random, math
 from requests import NullHandler
 from lib import globals
 from simple_chalk import chalk
@@ -57,9 +58,113 @@ class Finance:
         else:
             print("All coins are updated.")
 
-    def generateRandomPricesFor(self, coin):
-        print('ToDo: generateRandomPricesFor', coin)
 
+    def doGenerateCustomRandomPrices(self, startPrice, endPrice, totalMonths, fluctuation = 10):
+        step = (endPrice - startPrice) / totalMonths
+        calcPrice = startPrice
+
+        # Basic return structure
+        data = {
+            "step": step,
+            "startPrice": startPrice,
+            "endPrice": endPrice,
+            "months": totalMonths,
+            "fluctuation": fluctuation,
+            "prices": [],
+        }
+
+        # For every month, we calculate the monthly value, a ±10% variation and a random value between this variation
+        # Also, we make a bit more natural char using logs (10 base) and a random variation, once again based on log,
+        # with the logic that the random variation begins from ±10% and at the ends, falls down to ~0%.
+        # The final result can be found here: https://i.imgur.com/0eF91zG.png
+        # The sample has the following parameters:
+        # startPrice: 50,200
+        # endPrice: 157,746
+        # totalMonths: 48
+
+        oldRange = (math.log(totalMonths + 1, 10) - 0) # Starting from 1 to number of months (+1)
+        newRange = (10 - 1) # Range 1 to 10 for log
+        oldMin = math.log(1, 10) # 0
+        newMin = 1
+
+
+        for n in range(totalMonths - 1):
+            calcPrice += step
+            # Convert a number range to another range, maintaining ratio
+            # OldRange = (OldMax - OldMin)  
+            # NewRange = (NewMax - NewMin)  
+            # NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+            # Source: https://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
+
+            # What we do here actually is that we generate a 1-10 logarithmic chart based on the number of months
+            logVar = (((math.log(n + 2, 10) - oldMin) * newRange) / oldRange) + newMin
+
+            # And we apply it in the current loop, to generate a similar logic on the values here.
+            logPrice = startPrice + (endPrice - startPrice) * math.log(logVar, 10)
+
+            logPercent = 1 - math.log(10, 10) * (n + 1) / totalMonths
+            data["prices"].append({
+                # "month": n + 1,
+                "linePrice": calcPrice,
+                "lineRandom": random.uniform(calcPrice - (startPrice * fluctuation / 100), calcPrice + (startPrice * fluctuation / 100)),
+                "logPrice": logPrice,
+                "logRandom": random.uniform(logPrice * (1 - (logPercent / 10)), logPrice * (1 + (logPercent / 10)))
+            })
+        
+        return data
+
+    def generateCustomRandomPrices(self):
+        while True:
+            startPrice = input("Give me the starting price: ")
+            try:
+                startPrice = float(startPrice)
+                if startPrice < 0:
+                    raise ValueError('')
+            except ValueError as e:
+                print("Please, enter a valid real value.")
+            else:
+                break
+
+        while True:
+            endPrice = input("Give me the end price: ")
+            try:
+                endPrice = float(endPrice)
+                if endPrice < 0:
+                    raise ValueError('')
+            except ValueError as e:
+                print("Please, enter a valid real value.")
+            else:
+                break
+
+        while True:
+            totalMonths = input("Give me the number of months to calculate: ")
+            try:
+                totalMonths = int(totalMonths)
+                if totalMonths < 0:
+                    raise ValueError('')
+            except ValueError as e:
+                print("Please, enter a valid integer value.")
+            else:
+                break
+
+        data = self.doGenerateCustomRandomPrices(startPrice, endPrice, totalMonths)
+
+        print()
+        print("Starting price: ", data["startPrice"])
+        print("Step          : ", data["step"])
+        print("Total months  : ", data["months"])
+        print("Target        : ", data["endPrice"])
+        for idx, month in enumerate(data["prices"]):
+            print()
+            print("Month " + str(idx + 1) + ": ")
+            print("  Price           : ", month["linePrice"])
+            print("  Random price    : ", month["lineRandom"])
+            print("  Log price       : ", month["logPrice"])
+            print("  Log random price: ", month["logRandom"])
+
+        print()
+        print("Copy the data below to use it in a spreadsheet:")
+        print(data)
 
     # ToDo
     def predictionsAndInvestments(self, coin):
@@ -71,5 +176,38 @@ class Finance:
     def predictionsAndInvestmentsFictionalCoin(self):
         print('ToDo: predictionsAndInvestmentsFictionalCoin')
 
-    def generateCustomRandomPrices(self):
-        print('ToDo: generateCustomRandomPrices')
+    def generateRandomPricesFor(self, coin):
+        print('ToDo: generateRandomPricesFor', coin)
+        # This function will access and crawl specific sites to get prices:
+        # Nomics.co: Current price
+
+        # BTC
+        # https://longforecast.com/bitcoin-price-predictions-2017-2018-2019-btc-to-usd
+        # https://coinmarketcap.com/currencies/bitcoin/price-estimates/
+        # https://coinpriceforecast.com/bitcoin-forecast-2020-2025-2030
+        # https://digitalcoinprice.com/forecast/bitcoin/2021
+
+        # ETH
+        # https://longforecast.com/ethereum-price-prediction-2018-2019-2020-2021-eth-to-usd
+        # https://coinmarketcap.com/currencies/ethereum/price-estimates/
+        # https://coinpriceforecast.com/ethereum-forecast-2020-2025-2030
+        # https://digitalcoinprice.com/forecast/ethereum/2021
+
+        # ADA
+        # https://longforecast.com/cardano-price-prediction-2018-2019-2020-2021-ada-to-usd
+        # https://coinmarketcap.com/currencies/cardano/price-estimates/
+        # https://coinpriceforecast.com/cardano-forecast-2020-2025-2030
+        # https://digitalcoinprice.com/forecast/cardano/2021
+
+        # BNB
+        # https://longforecast.com/binance-coin
+        # https://coinmarketcap.com/currencies/binance-coin/price-estimates/
+        # https://coinpriceforecast.com/binance-coin
+        # https://digitalcoinprice.com/forecast/binance-coin
+
+        # The plan is to get as best prediction as possible, in case of pages not providing monthly prices
+        # but yearly or semi yearly prices
+
+    def doGenerateChartFile(self, data, filename):
+        print("ToDo: doGenerateChartFiles")
+        # This function will get all the data generate an image file
