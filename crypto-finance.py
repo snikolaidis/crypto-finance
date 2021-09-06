@@ -11,12 +11,17 @@ from lib import database
 from lib import finance
 from lib import misc
 from lib import tools
+from lib import network
+
+from lib import scrapers
 
 def initTheLibraries():
     globals.database = database.Database()
     globals.finance = finance.Finance()
     globals.misc = misc.Misc()
     globals.tools = tools.Tools()
+    globals.network = network.Network()
+    globals.scrapers = scrapers.Scrapers()
 
 def main():
     globals.misc.doTheMenuLoop()

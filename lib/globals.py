@@ -3,3 +3,5 @@ def init():
     global misc
     global finance
     global tools
+    global network
+    global scrapers
