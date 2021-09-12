@@ -5,7 +5,7 @@ from simple_chalk import chalk
 
 class Finance:
 
-    def calculateMonthlyRepeatedInvestment(coin, monthly_invest = 500, yearly_perc_increase = 20, method = "avg", initial_amount = 0):
+    def calculateMonthlyRepeatedInvestment(self, coin, monthly_invest = 500, yearly_perc_increase = 20, method = "avg", initial_amount = 0):
         print("")
         print("Coin: " + coin["code"].upper())
         print("Coin price at 12/2021: " + "$ {:,.2f}".format(getThePrice(coin["end_of_2021"], method)))
@@ -114,38 +114,10 @@ class Finance:
         return data
 
     def generateCustomRandomPrices(self):
-        while True:
-            startPrice = input("Give me the starting price: ")
-            try:
-                startPrice = float(startPrice)
-                if startPrice < 0:
-                    raise ValueError('')
-            except ValueError as e:
-                print("Please, enter a valid real value.")
-            else:
-                break
 
-        while True:
-            endPrice = input("Give me the end price: ")
-            try:
-                endPrice = float(endPrice)
-                if endPrice < 0:
-                    raise ValueError('')
-            except ValueError as e:
-                print("Please, enter a valid real value.")
-            else:
-                break
-
-        while True:
-            totalMonths = input("Give me the number of months to calculate: ")
-            try:
-                totalMonths = int(totalMonths)
-                if totalMonths < 0:
-                    raise ValueError('')
-            except ValueError as e:
-                print("Please, enter a valid integer value.")
-            else:
-                break
+        startPrice = globals.tools.pickAFloat(message = "Give me the starting price", max = 100_000_000)
+        endPrice = globals.tools.pickAFloat(message = "Give me the end price", min = startPrice, max = 100_000_000)
+        totalMonths = globals.tools.pickAnInteger(message = "Give me the number of months to calculate", max = 120)
 
         data = self.doGenerateCustomRandomPrices(startPrice, endPrice, totalMonths)
 
@@ -183,27 +155,27 @@ class Finance:
 
         # BTC
         # https://longforecast.com/bitcoin-price-predictions-2017-2018-2019-btc-to-usd
-        # https://coinmarketcap.com/currencies/bitcoin/price-estimates/
         # https://coinpriceforecast.com/bitcoin-forecast-2020-2025-2030
         # https://digitalcoinprice.com/forecast/bitcoin/2021
+        # https://coinmarketcap.com/currencies/bitcoin/price-estimates/ YOU NEED TO BE LOGGED IN!
 
         # ETH
         # https://longforecast.com/ethereum-price-prediction-2018-2019-2020-2021-eth-to-usd
-        # https://coinmarketcap.com/currencies/ethereum/price-estimates/
         # https://coinpriceforecast.com/ethereum-forecast-2020-2025-2030
         # https://digitalcoinprice.com/forecast/ethereum/2021
+        # https://coinmarketcap.com/currencies/ethereum/price-estimates/ YOU NEED TO BE LOGGED IN!
 
         # ADA
         # https://longforecast.com/cardano-price-prediction-2018-2019-2020-2021-ada-to-usd
-        # https://coinmarketcap.com/currencies/cardano/price-estimates/
         # https://coinpriceforecast.com/cardano-forecast-2020-2025-2030
         # https://digitalcoinprice.com/forecast/cardano/2021
+        # https://coinmarketcap.com/currencies/cardano/price-estimates/ YOU NEED TO BE LOGGED IN!
 
         # BNB
         # https://longforecast.com/binance-coin
-        # https://coinmarketcap.com/currencies/binance-coin/price-estimates/
         # https://coinpriceforecast.com/binance-coin
         # https://digitalcoinprice.com/forecast/binance-coin
+        # https://coinmarketcap.com/currencies/binance-coin/price-estimates/ YOU NEED TO BE LOGGED IN!
 
         # The plan is to get as best prediction as possible, in case of pages not providing monthly prices
         # but yearly or semi yearly prices

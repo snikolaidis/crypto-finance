@@ -54,4 +54,33 @@ class Tools:
             return months[month]
         except:
             return -1
+    
+    def pickAnInteger(self, message = "Give me a number", min = 1, max = 100, default = 1):
+        theNumber = default
+        while True:
+            theNumber = input(message + " (" + f"{min:,}" + " - " + f"{max:,}" + "): ")
+            try:
+                theNumber = int(theNumber)
+                if theNumber < min or theNumber > max:
+                    raise ValueError('')
+            except ValueError as e:
+                print("Please, enter a valid integer value.")
+            else:
+                break
         
+        return theNumber
+    
+    def pickAFloat(self, message = "Give me a number", min = 1, max = 100, default = 1):
+        theNumber = default
+        while True:
+            theNumber = input(message + " (" + f"{min:,}" + " - " + f"{max:,}" + "): ")
+            try:
+                theNumber = float(theNumber)
+                if theNumber < min or theNumber > max:
+                    raise ValueError('')
+            except ValueError as e:
+                print("Please, enter a valid real value.")
+            else:
+                break
+        
+        return theNumber

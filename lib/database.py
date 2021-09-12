@@ -95,6 +95,49 @@ class Database:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
+        # Version 3:
+        # New module: NFTs
+        if self.version < 4:
+            cur.execute("""CREATE TABLE nft_all_conbinations (
+                id INTEGER PRIMARY KEY,
+                code TEXT NOT NULL,
+                uuid TEXT NOT NULL,
+                used INTEGER NOT NULL,
+                uncommon_id INTEGER NOT NULL
+            );""")
+            cur.execute("CREATE INDEX nft_all_conbinations_IDX_code ON nft_all_conbinations(code)")
+            cur.execute("CREATE INDEX nft_all_conbinations_IDX_uuid ON nft_all_conbinations(uuid)")
+            cur.execute("CREATE INDEX nft_all_conbinations_IDX_used ON nft_all_conbinations(used)")
+            cur.execute("CREATE INDEX nft_all_conbinations_IDX_uncommon_id ON nft_all_conbinations(uncommon_id)")
+
+            # uncommon_level: how may uncommon features are there
+            # uncommon_fields: per feature, uncommon level: 0-1-0-0-0: All features are common, 2nd feature is uncommon
+            cur.execute("""CREATE TABLE nft_uncommon_conbinations (
+                id INTEGER PRIMARY KEY,
+                common_id INTEGER NOT NULL,
+                uncommon_level INTEGER NOT NULL,
+                uncommon_fields TEXT NOT NULL
+            );""")
+            cur.execute("CREATE INDEX nft_uncommon_conbinations_IDX_common_id ON nft_uncommon_conbinations(common_id)")
+            cur.execute("CREATE INDEX nft_uncommon_conbinations_IDX_uncommon_level ON nft_uncommon_conbinations(uncommon_level)")
+            cur.execute("CREATE INDEX nft_uncommon_conbinations_IDX_uncommon_fields ON nft_uncommon_conbinations(uncommon_fields)")
+
+            self.version = 4
+            print("Upgrading database to version " + str(self.version))
+            cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
+            self.conn.commit()
+
+        # Version 4:
+        # New module: NFTs
+        if self.version < 5:
+            cur.execute("ALTER TABLE nft_all_conbinations ADD COLUMN used_date TEXT NULL")
+            cur.execute("CREATE INDEX nft_all_conbinations_IDX_used_date ON nft_all_conbinations(used_date)")
+
+            self.version = 5
+            print("Upgrading database to version " + str(self.version))
+            cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
+            self.conn.commit()
+
         # End of database migration
         if prev_version != self.version:
             print("Database upgrade completed")
@@ -147,7 +190,34 @@ class Database:
     def getSettings(self, key):
         key = print("Give me the key: ")
         return self.getOptionsValue(key)
+    
+    def execSQL(self, sql, params = None):
+        cur = self.conn.cursor()
+        if params is None:
+            cur.execute(sql)
+        else:
+            cur.execute(sql, params)
+        self.conn.commit()
         
+    def execSelect(self, sql, params = None):
+        cur = self.conn.cursor()
+        if params is None:
+            cur.execute(sql)
+        else:
+            cur.execute(sql, params)
+        return cur.fetchall()
+        
+    def execSelectOne(self, sql, params = None):
+        cur = self.conn.cursor()
+        if params is None:
+            cur.execute(sql)
+        else:
+            cur.execute(sql, params)
+        return cur.fetchone()
+
+
+
+    # Refactor: Move those calls to finance, by using execCommand, execSelect and execSelectOne methods
     def getSupportedCoins(self, coin = "_all"):
         cur = self.conn.cursor()
         if coin == "_all":

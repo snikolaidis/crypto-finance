@@ -5,3 +5,4 @@ def init():
     global tools
     global network
     global scrapers
+    global nft

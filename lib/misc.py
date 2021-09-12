@@ -4,14 +4,15 @@ from lib import globals
 
 class Misc:
 
-    version = "02.09.04.007"
+    version = "02.09.12.009"
 
     # def __init__(self):
 
     def showTheTitle(self):
-        print(chalk.redBright('CryptoFinance') + ' - A finanfial tool for cryptocurrencies, ' + chalk.greenBright('ver.' + self.version))
+        print(chalk.redBright('CryptoFinance') + ' - A financial tool for cryptocurrencies, ' + chalk.greenBright('ver.' + self.version))
         print(chalk.greenBright('======================================================================='))
         print()
+
 
     def doTheMenuLoop(self):
         global database
@@ -55,6 +56,7 @@ class Misc:
                 print("---------------------------------------")
                 input("Press [Enter] to return to previous menu.")
 
+
     # Menu options:
     # key: keyboard key
     # value:
@@ -91,17 +93,28 @@ class Misc:
                 {"key": "4", "title": "Generate random prices for Binance Coin (BNB)", "value": "task:finance:generateRandomPricesFor:'bnb'"},
                 {"key": "5", "title": "Generate custom random prices", "value": "task:finance:generateCustomRandomPrices"},
             ]
+        elif menu == 'allAboutNFTs':
+            print('ALL ABOUT NFTs:')
+            accepted_options = [
+                {"key": "1", "title": "Generate all combinations", "value": "task:nft:generateAllCombinations"},
+                {"key": "2", "title": "Select random image(s)", "value": "task:nft:selectRandomImages"},
+            ]
         else:
             print('MAIN MENU:')
             accepted_options = [
                 {"key": "1", "title": "Predictions and Investments", "value": "menu:predictionsAndInvestments"},
                 {"key": "2", "title": "Generate random prices", "value": "menu:generateRandomPrices"},
+                {"key": "3", "title": "All about NFTs", "value": "menu:allAboutNFTs"},
+                {"key": "-"},
                 {"key": "s", "title": "Settings", "value": "menu:settings"},
                 {"key": "a", "title": "About", "value": "task:misc:showAbout"},
             ]
         
         for option in accepted_options:
-            print(chalk.greenBright('[' + option['key'].upper() + '] ') + option['title'])
+            if option['key'] == "-":
+                print()
+            else:
+                print(chalk.greenBright('[' + option['key'].upper() + '] ') + option['title'])
 
         print()
 
@@ -120,6 +133,7 @@ class Misc:
                 if value == option['key']:
                     return option['value']
 
+
     # https://www.tutorialspoint.com/how-to-clear-screen-in-python
     def screen_clear(self):
         # for mac and linux(here, os.name is 'posix')
@@ -129,6 +143,7 @@ class Misc:
             # for windows platfrom
             _ = os.system('cls')
         # print out some text
+
 
     def showAbout(self):
         print(
