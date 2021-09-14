@@ -1,4 +1,5 @@
 import sys, os
+from getkey import getkey
 from simple_chalk import chalk
 from lib import globals
 
@@ -25,6 +26,7 @@ class Misc:
                 print(chalk.greenBright('Thank you for working with me! Have a lovely and profitable day!'))
                 print()
                 globals.database.disconnect()
+                self.screen_clear()
                 sys.exit()
 
             # Analyze the option
@@ -54,7 +56,9 @@ class Misc:
                     eval('globals.' + module + '.' + task)()
                 print()
                 print("---------------------------------------")
-                input("Press [Enter] to return to previous menu.")
+                print("Press any key to return to previous menu.")
+                print()
+                getkey()
 
 
     # Menu options:
@@ -125,14 +129,14 @@ class Misc:
             print(chalk.greenBright('[X] ') + ' Return to main menu')
             accepted_options.append({"key": "x", "value": "menu:main"})
 
-        while True:
-            print()
-            value = input("Please give your choice:\n")
-            value = value.lower()
-            for option in accepted_options:
-                if value == option['key']:
-                    return option['value']
+        print('')
 
+        while True:
+            key = getkey()
+            key = key.lower()
+            for option in accepted_options:
+                if key == option['key']:
+                    return option['value']
 
     # https://www.tutorialspoint.com/how-to-clear-screen-in-python
     def screen_clear(self):

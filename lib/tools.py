@@ -84,3 +84,9 @@ class Tools:
                 break
         
         return theNumber
+
+    def formatThePrice(self, price):
+        if price > 1:
+            return "{:,.2f}".format(price)
+        else:
+            return "{:,.f}".format(price)
