@@ -38,20 +38,21 @@ class Misc:
             ],
             # settings
             [
+                {"key": "1", "title": "Coins supported", "value": "task:finance:getCoinsSupported"},
+                {"key": "2", "title": "Update supported coins", "value": "task:finance:updateCoinsSupported"},
+                {"key": "3", "title": "Add new coin", "value": "task:finance:addCoinsSupported"},
+                {"key": "4", "title": "Remove existing coin", "value": "task:finance:removeCoinsSupported"},
+                {"key": "-"},
+                {"key": "s", "title": "Show settings", "value": "task:database:showSettings"},
+                {"key": "m", "title": "Add/Modify entry", "value": "task:database:setSettings"},            ],
+            # predictionsAndInvestments
+            [
                 {"key": "1", "title": "Predict investment in Bitcoin (BTC)", "value": "task:finance:predictionsAndInvestments:'btc'"},
                 {"key": "2", "title": "Predict investment in Ethereum (ETH)", "value": "task:finance:predictionsAndInvestments:'eth'"},
                 {"key": "3", "title": "Predict investment in Cardano (ADA)", "value": "task:finance:predictionsAndInvestments:'ada'"},
                 {"key": "4", "title": "Predict investment in Binance Coin (BNB)", "value": "task:finance:predictionsAndInvestments:'bnb'"},
                 {"key": "5", "title": "Predict investment in many coins", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
                 {"key": "6", "title": "Predict investment in fictional coin", "value": "task:finance:predictionsAndInvestmentsManyCoins"},
-            ],
-            # predictionsAndInvestments
-            [
-                {"key": "1", "title": "Generate random prices for Bitcoin (BTC)", "value": "task:finance:generateRandomPricesFor:'btc'"},
-                {"key": "2", "title": "Generate random prices for Ethereum (ETH)", "value": "task:finance:generateRandomPricesFor:'eth'"},
-                {"key": "3", "title": "Generate random prices for Cardano (ADA)", "value": "task:finance:generateRandomPricesFor:'ada'"},
-                {"key": "4", "title": "Generate random prices for Binance Coin (BNB)", "value": "task:finance:generateRandomPricesFor:'bnb'"},
-                {"key": "5", "title": "Generate custom random prices", "value": "task:finance:generateCustomRandomPrices"},
             ],
             # generateRandomPrices
             [
@@ -103,11 +104,6 @@ class Misc:
                     params = options[3]
                 except:
                     hasParams = False
-
-                # print('MODULE: ' + module)
-                # print('TASK  : ' + task)
-                # print('PARAMS: ' + 'No param' if hasParams else params)
-                # print('EXEC  : globals.' + module + '.' + task)
 
                 if hasParams:
                     eval('globals.' + module + '.' + task)(eval(params))

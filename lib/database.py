@@ -23,15 +23,12 @@ class Database:
 
     def getVersion(self):
         print("Get current version")
-        cur = self.conn.cursor()
-        cur.execute("SELECT name FROM sqlite_master 'database' WHERE type='table' AND name='options'")
-        rows = cur.fetchall()
-        if len(rows) == 0:
+        rowsCnt, = self.execSelectOne("SELECT COUNT(*) FROM sqlite_master 'database' WHERE type='table' AND name='options'")
+        if int(rowsCnt) == 0:
             self.version = -1
         else:
-            self.version = 0
-            cur.execute("SELECT option_value FROM options WHERE option_name = 'version'")
-            self.version = int(cur.fetchone()[0])
+            rowVer, = self.execSelectOne("SELECT option_value FROM options WHERE option_name = 'version'")
+            self.version = int(rowVer)
         print("Database version: " + str(self.version))
     
     def updateDatabase(self):
@@ -138,6 +135,16 @@ class Database:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
+        # Version 5:
+        # Add rank in coins
+        if self.version < 6:
+            cur.execute("ALTER TABLE list_of_coins ADD COLUMN rank INTEGER NULL")
+
+            self.version = 6
+            print("Upgrading database to version " + str(self.version))
+            cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
+            self.conn.commit()
+
         # End of database migration
         if prev_version != self.version:
             print("Database upgrade completed")
@@ -197,6 +204,9 @@ class Database:
             cur.execute(sql)
         else:
             cur.execute(sql, params)
+        self.execCommit()
+        
+    def execCommit(self):
         self.conn.commit()
         
     def execSelect(self, sql, params = None):
@@ -217,18 +227,19 @@ class Database:
 
 
 
-    # Refactor: Move those calls to finance, by using execCommand, execSelect and execSelectOne methods
+    # ToDo: Refactor the following calls by moving them to finance and using execCommand, execSelect and execSelectOne methods
     def getSupportedCoins(self, coin = "_all"):
         cur = self.conn.cursor()
         if coin == "_all":
-            cur.execute("SELECT id, coin_name, coin_code, price_value, price_date FROM list_of_coins ORDER BY coin_code")
+            cur.execute("SELECT id, coin_name, coin_code, price_value, price_date, rank FROM list_of_coins ORDER BY rank")
             return cur.fetchall()
         else:
-            cur.execute("SELECT id, coin_name, coin_code, price_value, price_date FROM list_of_coins WHERE coin_code=?", [coin])
+            cur.execute("SELECT id, coin_name, coin_code, price_value, price_date, rank FROM list_of_coins WHERE coin_code=?", [coin])
             return cur.fetchone()
 
-    def setCoinInformation(self, coin, price, date):
-        cur = self.conn.cursor()
-        cur.execute("UPDATE list_of_coins SET price_value=?, price_date=? WHERE coin_code=?", [price, date, coin.upper()])
-        self.conn.commit()
-
+    def setCoinInformation(self, coinCode, price, date, rank, coinName = ''):
+        rowsCnt, = self.execSelectOne("SELECT COUNT(*) FROM list_of_coins 'database' WHERE coin_code = ?", [coinCode])
+        if int(rowsCnt) == 0:
+            self.execSQL("INSERT INTO list_of_coins (coin_name, coin_code, price_value, price_date, rank) VALUES (?, ?, ?, ?)", [coinName, coinCode.upper(), price, date, rank])
+        else:
+            self.execSQL("UPDATE list_of_coins SET price_value=?, price_date=?, rank=? WHERE coin_code=?", [price, date, rank, coinCode.upper()])

@@ -5,4 +5,9 @@ from lib import globals
 
 class Network:
     def callGet(self, url):
-        return requests.get(url)
+        res = requests.get(url)
+        if res.status_code == 200:
+            return res
+        else:
+            raise ConnectionError("Error while calling: " + url)
+            return False

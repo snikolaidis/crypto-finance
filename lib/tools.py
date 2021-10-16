@@ -21,16 +21,28 @@ class Tools:
 
         return round(finalPrice, 6)
 
+    def getNomicsKey(self):
+        return globals.database.getOptionsValue('nomics')
+
     def updatePricesFromNomics(self):
-        nomicsKey = globals.database.getOptionsValue('nomics')
+        nomicsKey = self.getNomicsKey()
         if nomicsKey == None:
             return False
 
-        res = globals.network.callGet("https://api.nomics.com/v1/currencies/ticker?ids=BTC,ETH,ADA,BNB&interval=1d,30d&convert=USD&per-page=100&page=1&key=" + nomicsKey)
-        if res.status_code == 200:
+        # Get list of coins
+        coinList = ''
+        rows = globals.database.execSelect("SELECT coin_code FROM list_of_coins")
+        for row in rows:
+            if coinList == '':
+                coinList = row[0]
+            else:
+                coinList = coinList + "," + row[0]
+
+        res = globals.network.callGet("https://api.nomics.com/v1/currencies/ticker?ids=" + coinList + "&interval=1d,30d&convert=USD&per-page=100&page=1&key=" + nomicsKey)
+        if res:
             data  = json.loads(res.text)
             for coin in data:
-                globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'])
+                globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], coin['rank'])
 
         return True
     
@@ -69,6 +81,20 @@ class Tools:
                 break
         
         return theNumber
+    
+    def pickAString(self, message = "Give me a string", min = 1, max = 100, default = 1):
+        theString = default
+        while True:
+            theString = input(message + " (length between " + f"{min:,}" + " - " + f"{max:,}" + "): ")
+            try:
+                if len(theString) < min or len(theString) > max:
+                    raise ValueError('')
+            except ValueError as e:
+                print("Please, enter a valid string value.")
+            else:
+                break
+        
+        return theString
     
     def pickAFloat(self, message = "Give me a number", min = 1, max = 100, default = 1):
         theNumber = default

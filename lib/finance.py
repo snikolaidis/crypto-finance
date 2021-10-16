@@ -1,4 +1,4 @@
-import random, math
+import random, math, json
 from requests import NullHandler
 from lib import globals
 from simple_chalk import chalk
@@ -51,6 +51,8 @@ class Finance:
                 print("  Price: " + chalk.green('{:,}'.format(coin[3])))
             if coin[4] is not None:
                 print("  Date: " + chalk.green(coin[4]))
+            if coin[5] is not None:
+                print("  Rank: " + chalk.green(coin[5]))
 
     def updateCoinsSupported(self):
         if globals.tools.updatePricesFromNomics() == False:
@@ -58,6 +60,39 @@ class Finance:
         else:
             print("All coins are updated.")
 
+    def addCoinsSupported(self):
+        newCoin = ""
+        while True:
+            newCoin = globals.tools.pickAString("Give me the coin code", 0, 5).upper()
+            if newCoin == '':
+                break
+
+            try:
+                # Let's check if it exists in the database
+                coinCnt, = globals.database.execSelectOne("SELECT COUNT(*) FROM list_of_coins WHERE coin_code = ?", [newCoin])
+                if coinCnt > 0:
+                    raise ValueError(newCoin + " already exists in the database.")
+
+                nomicsKey = globals.tools.getNomicsKey()
+                if nomicsKey == None:
+                    return False
+
+                res = globals.network.callGet("https://api.nomics.com/v1/currencies/ticker?ids=" + newCoin + "&interval=1d,30d&convert=USD&per-page=100&page=1&key=" + nomicsKey)
+                if res:
+                    data  = json.loads(res.text)
+                    if len(data) == 0:
+                        raise ValueError(newCoin + " is an unknown coin. Please try again")
+                    coin = data[0]
+                    globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], coin['rank'], coin['name'])
+                    print(newCoin)
+
+                break
+
+            except ValueError as e:
+                print(e)
+
+    def removeCoinsSupported(self):
+        print("removeCoinsSupported")
 
     def doGenerateCustomRandomPrices(self, startPrice, endPrice, totalMonths, fluctuation = 10):
         step = (endPrice - startPrice) / totalMonths
