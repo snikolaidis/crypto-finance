@@ -1,4 +1,4 @@
-import random, math, json
+import random, math, json, time
 from requests import NullHandler
 from lib import globals
 from simple_chalk import chalk
@@ -46,19 +46,18 @@ class Finance:
     def getCoinsSupported(self):
         coins = globals.database.getSupportedCoins()
         for coin in coins:
-            print(coin[1] + ' (' + chalk.green(coin[2]) + ')')
-            if coin[3] is not None:
-                print("  Price: " + chalk.green('{:,}'.format(coin[3])))
-            if coin[4] is not None:
-                print("  Date: " + chalk.green(coin[4]))
-            if coin[5] is not None:
-                print("  Rank: " + chalk.green(coin[5]))
+            self.printCoinInformation(coin[2], coin[1], coin[3], coin[4], coin[5])
 
     def updateCoinsSupported(self):
         if globals.tools.updatePricesFromNomics() == False:
             print("There was an error while updating the system, please check and make sure you have the key " + chalk.green("nomics") + " configured in the settings.")
         else:
             print("All coins are updated.")
+
+        if globals.tools.updateFiatFromExchangeRatesAPI() == False:
+            print("There was an error while updating the system, please check and make sure you have the key " + chalk.green("exchangeratesapi") + " configured in the settings.")
+        else:
+            print("All FIAT are updated.")
 
     def addCoinsSupported(self):
         newCoin = ""
@@ -83,8 +82,18 @@ class Finance:
                     if len(data) == 0:
                         raise ValueError(newCoin + " is an unknown coin. Please try again")
                     coin = data[0]
-                    globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], coin['rank'], coin['name'])
-                    print(newCoin)
+                    rank = 999
+                    try:
+                        rank = coin['rank']
+                    except:
+                        print(newCoin + " has not ranking, I will apply ranking no 999.")
+                        print()
+
+                    globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], rank, coin['name'])
+                    print()
+                    self.printCoinInformation(coin['name'], coin['currency'], float(coin['price']), coin['price_date'], rank)
+                    print()
+                    print(newCoin + " was added in the database.")
 
                 break
 
@@ -92,7 +101,33 @@ class Finance:
                 print(e)
 
     def removeCoinsSupported(self):
-        print("removeCoinsSupported")
+        newCoin = ""
+        while True:
+            newCoin = globals.tools.pickAString("Give me the coin code", 0, 5).upper()
+            if newCoin == '':
+                break
+
+            try:
+                # Let's check if it exists in the database
+                coinCnt, = globals.database.execSelectOne("SELECT COUNT(*) FROM list_of_coins WHERE coin_code = ?", [newCoin])
+                if coinCnt == 0:
+                    raise ValueError(newCoin + " does not exists in the database.")
+
+                globals.database.unsetCoinInformation(newCoin)
+                print(newCoin + " was removed from the database.")
+                break
+
+            except ValueError as e:
+                print(e)
+
+    def printCoinInformation(self, coin_code, name, price, price_date, rank):
+        print(name + ' (' + chalk.green(coin_code) + ')')
+        if price > 1:
+            print("  Price: " + chalk.green('${:,.2f}'.format(price)))
+        else:
+            print("  Price: " + chalk.green('${:,}'.format(price)))
+        print("  Date: " + chalk.green(price_date))
+        print("  Rank: " + chalk.green(rank))
 
     def doGenerateCustomRandomPrices(self, startPrice, endPrice, totalMonths, fluctuation = 10):
         step = (endPrice - startPrice) / totalMonths
@@ -172,6 +207,42 @@ class Finance:
         print()
         print("Copy the data below to use it in a spreadsheet:")
         print(data)
+
+    def generateTabbedList(self):
+        excel_list = globals.database.getOptionsValue('excel_list')
+        if (excel_list is None) or excel_list == "":
+            print("Please update the " + chalk.greenBright("excel_list") + " parameter in settings.")
+            return False
+
+        usd_eur = globals.database.getOptionsValue('usd_eur')
+        if usd_eur is None:
+            usd_eur = globals.tools.updateFiatFromExchangeRatesAPI()
+
+        listOfPrices = time.strftime('%m/%d/%Y %H:%M:%S') + "->" + usd_eur
+        coinsNotListed = ""
+
+        # And let's get the prices
+        coins = excel_list.split(",")
+        for coin in coins:
+            res = globals.database.execSelectOne("SELECT price_value FROM list_of_coins WHERE coin_code = ?", [coin])
+            if res is not None:
+                price, = res
+                listOfPrices = listOfPrices + "->" + str(price)
+            else:
+                if coinsNotListed == "":
+                    coinsNotListed = coin
+                else:
+                    coinsNotListed = coinsNotListed + ", " + coin
+
+        # Adding data for CARPO
+        listOfPrices = listOfPrices + "->1"
+
+        print("Tabbed list of prices:")
+        print(listOfPrices)
+
+        if coinsNotListed != "":
+            print("")
+            print("Coins not found in the list: " + coinsNotListed)
 
     # ToDo
     def predictionsAndInvestments(self, coin):

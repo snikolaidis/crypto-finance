@@ -24,6 +24,9 @@ class Tools:
     def getNomicsKey(self):
         return globals.database.getOptionsValue('nomics')
 
+    def getExchangeRatesAPIKey(self):
+        return globals.database.getOptionsValue('exchangeratesapi')
+
     def updatePricesFromNomics(self):
         nomicsKey = self.getNomicsKey()
         if nomicsKey == None:
@@ -40,11 +43,29 @@ class Tools:
 
         res = globals.network.callGet("https://api.nomics.com/v1/currencies/ticker?ids=" + coinList + "&interval=1d,30d&convert=USD&per-page=100&page=1&key=" + nomicsKey)
         if res:
-            data  = json.loads(res.text)
+            data = json.loads(res.text)
             for coin in data:
-                globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], coin['rank'])
+                rank = 999
+                try:
+                    rank = coin['rank']
+                except:
+                    pass
+                globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], rank)
 
         return True
+
+    def updateFiatFromExchangeRatesAPI(self):
+        exchangeRatesAPIKey = self.getExchangeRatesAPIKey()
+        if exchangeRatesAPIKey == None:
+            return False
+
+        res = globals.network.callGet("http://api.exchangeratesapi.io/v1/latest?format=1&access_key=" + exchangeRatesAPIKey)
+        if res:
+            data = json.loads(res.text)
+            globals.database.setOptionsValue('usd_eur', 1 / data['rates']['USD'])
+            return 1 / data['rates']['USD']
+
+        return False
     
     def getTheMonthFromShort(self, month):
         month = month.lower()

@@ -21,6 +21,7 @@ What if I invest a specific amount every month for the following years on a spec
 ## Libraries
 pip install simple_chalk
 pip install beautifulsoup4
+pip install getkey
 
 -----
 _Last update: 26 Ayg 2021_

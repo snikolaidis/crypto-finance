@@ -6,7 +6,7 @@ from lib import globals
 
 class Misc:
 
-    version = "02.09.12.009"
+    version = "21.10.16.012"
     menuName = False
     menuTitles = False
     menuOptions = False
@@ -18,6 +18,7 @@ class Misc:
             'predictionsAndInvestments',
             'generateRandomPrices',
             'allAboutNFTs',
+            'allAboutCoins',
         ])
         self.menuTitles = np.array([
             'MAIN MENU',
@@ -25,24 +26,21 @@ class Misc:
             'PREDICTIONS AND INVESTMENTS',
             'GENERATE RANDOM PRICES',
             'ALL ABOUT NFTs',
+            'ALL ABOUT COINS',
         ])
         self.menuOptions = np.array([
             # main
             [
-                {"key": "1", "title": "Predictions and Investments", "value": "menu:predictionsAndInvestments"},
-                {"key": "2", "title": "Generate random prices", "value": "menu:generateRandomPrices"},
-                {"key": "3", "title": "All about NFTs", "value": "menu:allAboutNFTs"},
+                {"key": "c", "title": "All about Coins", "value": "menu:allAboutCoins"},
+                {"key": "p", "title": "Predictions and Investments", "value": "menu:predictionsAndInvestments"},
+                {"key": "r", "title": "Generate random prices", "value": "menu:generateRandomPrices"},
+                {"key": "n", "title": "All about NFTs", "value": "menu:allAboutNFTs"},
                 {"key": "-"},
                 {"key": "s", "title": "Settings", "value": "menu:settings"},
                 {"key": "a", "title": "About", "value": "task:misc:showAbout"},
             ],
             # settings
             [
-                {"key": "1", "title": "Coins supported", "value": "task:finance:getCoinsSupported"},
-                {"key": "2", "title": "Update supported coins", "value": "task:finance:updateCoinsSupported"},
-                {"key": "3", "title": "Add new coin", "value": "task:finance:addCoinsSupported"},
-                {"key": "4", "title": "Remove existing coin", "value": "task:finance:removeCoinsSupported"},
-                {"key": "-"},
                 {"key": "s", "title": "Show settings", "value": "task:database:showSettings"},
                 {"key": "m", "title": "Add/Modify entry", "value": "task:database:setSettings"},            ],
             # predictionsAndInvestments
@@ -66,6 +64,14 @@ class Misc:
             [
                 {"key": "1", "title": "Generate all combinations", "value": "task:nft:generateAllCombinations"},
                 {"key": "2", "title": "Select random image(s)", "value": "task:nft:selectRandomImages"},
+            ],
+            # allAboutCoins
+            [
+                {"key": "1", "title": "Coins supported", "value": "task:finance:getCoinsSupported"},
+                {"key": "2", "title": "Update supported coins", "value": "task:finance:updateCoinsSupported"},
+                {"key": "3", "title": "Add new coin", "value": "task:finance:addCoinsSupported"},
+                {"key": "4", "title": "Remove existing coin", "value": "task:finance:removeCoinsSupported"},
+                {"key": "5", "title": "Generate tabbed list", "value": "task:finance:generateTabbedList"},
             ],
         ])
 

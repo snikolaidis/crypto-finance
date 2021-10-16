@@ -156,7 +156,7 @@ class Database:
         cur.execute("SELECT option_value FROM options WHERE option_name = ?", [key.lower()])
         rec = cur.fetchone()
         if rec != None:
-            return  rec[0]
+            return rec[0]
         else:
             return None
     
@@ -240,6 +240,9 @@ class Database:
     def setCoinInformation(self, coinCode, price, date, rank, coinName = ''):
         rowsCnt, = self.execSelectOne("SELECT COUNT(*) FROM list_of_coins 'database' WHERE coin_code = ?", [coinCode])
         if int(rowsCnt) == 0:
-            self.execSQL("INSERT INTO list_of_coins (coin_name, coin_code, price_value, price_date, rank) VALUES (?, ?, ?, ?)", [coinName, coinCode.upper(), price, date, rank])
+            self.execSQL("INSERT INTO list_of_coins (coin_name, coin_code, price_value, price_date, rank) VALUES (?, ?, ?, ?, ?)", [coinName, coinCode.upper(), price, date, rank])
         else:
             self.execSQL("UPDATE list_of_coins SET price_value=?, price_date=?, rank=? WHERE coin_code=?", [price, date, rank, coinCode.upper()])
+
+    def unsetCoinInformation(self, coinCode):
+        self.execSQL("DELETE FROM list_of_coins WHERE coin_code = ?", [coinCode])
