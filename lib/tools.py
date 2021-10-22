@@ -34,7 +34,7 @@ class Tools:
 
         # Get list of coins
         coinList = ''
-        rows = globals.database.execSelect("SELECT coin_code FROM list_of_coins")
+        rows = globals.db_schema.execSelect("SELECT coin_code FROM list_of_coins")
         for row in rows:
             if coinList == '':
                 coinList = row[0]

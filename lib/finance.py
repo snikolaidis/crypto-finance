@@ -68,7 +68,7 @@ class Finance:
 
             try:
                 # Let's check if it exists in the database
-                coinCnt, = globals.database.execSelectOne("SELECT COUNT(*) FROM list_of_coins WHERE coin_code = ?", [newCoin])
+                coinCnt, = globals.db_schema.execSelectOne("SELECT COUNT(*) FROM list_of_coins WHERE coin_code = ?", [newCoin])
                 if coinCnt > 0:
                     raise ValueError(newCoin + " already exists in the database.")
 
@@ -109,7 +109,7 @@ class Finance:
 
             try:
                 # Let's check if it exists in the database
-                coinCnt, = globals.database.execSelectOne("SELECT COUNT(*) FROM list_of_coins WHERE coin_code = ?", [newCoin])
+                coinCnt, = globals.db_schema.execSelectOne("SELECT COUNT(*) FROM list_of_coins WHERE coin_code = ?", [newCoin])
                 if coinCnt == 0:
                     raise ValueError(newCoin + " does not exists in the database.")
 
@@ -224,7 +224,7 @@ class Finance:
         # And let's get the prices
         coins = excel_list.split(",")
         for coin in coins:
-            res = globals.database.execSelectOne("SELECT price_value FROM list_of_coins WHERE coin_code = ?", [coin])
+            res = globals.db_schema.execSelectOne("SELECT price_value FROM list_of_coins WHERE coin_code = ?", [coin])
             if res is not None:
                 price, = res
                 listOfPrices = listOfPrices + "->" + str(price)
@@ -239,6 +239,8 @@ class Finance:
 
         print("Tabbed list of prices:")
         print(listOfPrices)
+        print("")
+        print("Don't forget to replace -> with tabs. :-)")
 
         if coinsNotListed != "":
             print("")

@@ -1,4 +1,5 @@
 def init():
+    global db_schema
     global database
     global misc
     global finance

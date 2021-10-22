@@ -7,6 +7,7 @@ from simple_chalk import chalk
 
 # Custom libraries
 from lib import globals
+from lib import db_schema
 from lib import database
 from lib import finance
 from lib import misc
@@ -16,6 +17,7 @@ from lib import scrapers
 from lib import nft
 
 def initTheLibraries():
+    globals.db_schema = db_schema.DB_Schema()
     globals.database = database.Database()
     globals.finance = finance.Finance()
     globals.misc = misc.Misc()

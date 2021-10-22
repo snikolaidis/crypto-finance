@@ -82,7 +82,6 @@ class Misc:
 
 
     def doTheMenuLoop(self):
-        global database
         last_menu_option = 'main'
         while True:
             self.screen_clear()
@@ -91,7 +90,7 @@ class Misc:
                 print()
                 print(chalk.greenBright('Thank you for working with me! Have a lovely and profitable day!'))
                 print()
-                globals.database.disconnect()
+                globals.db_schema.disconnect()
                 self.screen_clear()
                 sys.exit()
 
