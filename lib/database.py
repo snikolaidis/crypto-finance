@@ -4,8 +4,10 @@ from simple_chalk import chalk
 
 class Database:
     
-    def getOptionsValue(self, key):
+    def getOptionsValue(self, key, default = None):
         rec, = globals.db_schema.execSelectOne("SELECT option_value FROM options WHERE option_name = ?", [key.lower()])
+        if rec is None:
+            rec = default
         return rec
     
     def setOptionsValue(self, key, value):
@@ -53,9 +55,12 @@ class Database:
     def setCoinInformation(self, coinCode, price, date, rank, coinName = ''):
         rowsCnt, = globals.db_schema.execSelectOne("SELECT COUNT(*) FROM list_of_coins 'database' WHERE coin_code = ?", [coinCode])
         if int(rowsCnt) == 0:
-            globals.db_schema.execSQL("INSERT INTO list_of_coins (coin_name, coin_code, price_value, price_date, rank) VALUES (?, ?, ?, ?, ?)", [coinName, coinCode.upper(), price, date, rank])
+            globals.db_schema.execSQL("INSERT INTO list_of_coins (coin_name, coin_code, price_value, price_date, rank) VALUES (?, ?, ?, ?, ?)", [coinName, coinCode.upper(), price, globals.tools.clearDateIsoFormat(date), rank])
         else:
-            globals.db_schema.execSQL("UPDATE list_of_coins SET price_value=?, price_date=?, rank=? WHERE coin_code=?", [price, date, rank, coinCode.upper()])
+            globals.db_schema.execSQL("UPDATE list_of_coins SET price_value=?, price_date=?, rank=? WHERE coin_code=?", [price, globals.tools.clearDateIsoFormat(date), rank, coinCode.upper()])
 
     def unsetCoinInformation(self, coinCode):
         globals.db_schema.execSQL("DELETE FROM list_of_coins WHERE coin_code = ?", [coinCode])
+
+    def addCoinHistory(self, coin_code, coin_date, coin_price):
+        globals.db_schema.execSQL("INSERT INTO history_of_coins (coin_code, coin_date, price) VALUES (?, ?, ?)", [coin_code.upper(), globals.tools.clearDateIsoFormat(coin_date), coin_price])

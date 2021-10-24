@@ -49,12 +49,12 @@ class Finance:
             self.printCoinInformation(coin[2], coin[1], coin[3], coin[4], coin[5])
 
     def updateCoinsSupported(self):
-        if globals.tools.updatePricesFromNomics() == False:
+        if globals.fintools.updatePricesFromNomics() == False:
             print("There was an error while updating the system, please check and make sure you have the key " + chalk.green("nomics") + " configured in the settings.")
         else:
             print("All coins are updated.")
 
-        if globals.tools.updateFiatFromExchangeRatesAPI() == False:
+        if globals.fintools.updateFiatFromExchangeRatesAPI() == False:
             print("There was an error while updating the system, please check and make sure you have the key " + chalk.green("exchangeratesapi") + " configured in the settings.")
         else:
             print("All FIAT are updated.")
@@ -216,7 +216,7 @@ class Finance:
 
         usd_eur = globals.database.getOptionsValue('usd_eur')
         if usd_eur is None:
-            usd_eur = globals.tools.updateFiatFromExchangeRatesAPI()
+            usd_eur = globals.fintools.updateFiatFromExchangeRatesAPI()
 
         listOfPrices = time.strftime('%m/%d/%Y %H:%M:%S') + "->" + usd_eur
         coinsNotListed = ""
@@ -245,6 +245,13 @@ class Finance:
         if coinsNotListed != "":
             print("")
             print("Coins not found in the list: " + coinsNotListed)
+
+    def updateHistoryOfAllCoins(self):
+        coins = globals.database.getSupportedCoins()
+        is_first = True
+        for coin in coins:
+            globals.fintools.updateHistoryOfCoin(coin[2], replace = is_first, echo = True)
+            is_first = False
 
     # ToDo
     def predictionsAndInvestments(self, coin):

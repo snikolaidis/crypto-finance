@@ -22,6 +22,9 @@ What if I invest a specific amount every month for the following years on a spec
 pip install simple_chalk
 pip install beautifulsoup4
 pip install getkey
+pip install numpy
+pip install yfinance
+pip install pandas_ta
 
 -----
 _Last update: 26 Ayg 2021_

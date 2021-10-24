@@ -15,6 +15,9 @@ class DB_Schema:
         print("Connecting to database")
         self.conn = sqlite3.connect('./database/database.db')
 
+    def getConnection(self):
+        return self.conn
+
     # Commit all pending changes
     # Close the connection
     def disconnect(self):
@@ -82,7 +85,7 @@ class DB_Schema:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
-        # Version 2:
+        # Version 3:
         # List of coins - Adding BNB
         if self.version < 3:
             cur.execute("INSERT INTO list_of_coins (coin_name, coin_code) VALUES (?, ?)", ["Binance Coin", "BNB"])
@@ -92,7 +95,7 @@ class DB_Schema:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
-        # Version 3:
+        # Version 4:
         # New module: NFTs
         if self.version < 4:
             cur.execute("""CREATE TABLE nft_all_conbinations (
@@ -124,7 +127,7 @@ class DB_Schema:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
-        # Version 4:
+        # Version 5:
         # New module: NFTs
         if self.version < 5:
             cur.execute("ALTER TABLE nft_all_conbinations ADD COLUMN used_date TEXT NULL")
@@ -135,7 +138,7 @@ class DB_Schema:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
-        # Version 5:
+        # Version 6:
         # Add rank in coins
         if self.version < 6:
             cur.execute("ALTER TABLE list_of_coins ADD COLUMN rank INTEGER NULL")
@@ -145,20 +148,14 @@ class DB_Schema:
             cur.execute("UPDATE options set option_value = ? where option_name = ?", [self.version, 'version'])
             self.conn.commit()
 
-        # Version 6:
+        # Version 7:
         # Add rank in coins
         if self.version < 7:
             cur.execute("""CREATE TABLE history_of_coins (
                 id INTEGER PRIMARY KEY,
                 coin_code TEXT NOT NULL,
                 coin_date TEXT NULL,
-                price REAL NULL,
-                volume REAL NULL,
-                spot_volume REAL NULL,
-                derivative_volume REAL NULL,
-                transparent_volume REAL NULL,
-                transparent_spot_volume REAL NULL,
-                transparent_derivative_volume REAL NULL
+                price REAL NULL
             );""")
             cur.execute("CREATE INDEX history_of_coins_IDX_code ON history_of_coins(coin_code)")
             cur.execute("CREATE INDEX history_of_coins_IDX_date ON history_of_coins(coin_date)")

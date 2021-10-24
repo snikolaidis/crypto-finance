@@ -7,3 +7,4 @@ def init():
     global network
     global scrapers
     global nft
+    global fintools

@@ -42,7 +42,8 @@ class Misc:
             # settings
             [
                 {"key": "s", "title": "Show settings", "value": "task:database:showSettings"},
-                {"key": "m", "title": "Add/Modify entry", "value": "task:database:setSettings"},            ],
+                {"key": "m", "title": "Add/Modify entry", "value": "task:database:setSettings"},
+            ],
             # predictionsAndInvestments
             [
                 {"key": "1", "title": "Predict investment in Bitcoin (BTC)", "value": "task:finance:predictionsAndInvestments:'btc'"},
@@ -68,12 +69,14 @@ class Misc:
             # allAboutCoins
             [
                 {"key": "1", "title": "Coins supported", "value": "task:finance:getCoinsSupported"},
-                {"key": "2", "title": "Update supported coins", "value": "task:finance:updateCoinsSupported"},
-                {"key": "3", "title": "Add new coin", "value": "task:finance:addCoinsSupported"},
-                {"key": "4", "title": "Remove existing coin", "value": "task:finance:removeCoinsSupported"},
-                {"key": "5", "title": "Generate tabbed list", "value": "task:finance:generateTabbedList"},
+                {"key": "2", "title": "Add new coin", "value": "task:finance:addCoinsSupported"},
+                {"key": "3", "title": "Remove existing coin", "value": "task:finance:removeCoinsSupported"},
+                {"key": "4", "title": "Generate tabbed list", "value": "task:finance:generateTabbedList"},
+                {"key": "-"},
+                {"key": "u", "title": "Update coins", "value": "task:finance:updateCoinsSupported"},
+                {"key": "a", "title": "Coin Analysis", "value": "task:finance:updateHistoryOfAllCoins"},
             ],
-        ])
+        ], dtype="object")
 
     def showTheTitle(self):
         print(chalk.redBright('CryptoFinance') + ' - A financial tool for cryptocurrencies, ' + chalk.greenBright('ver.' + self.version))

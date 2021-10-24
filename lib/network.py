@@ -9,5 +9,8 @@ class Network:
         if res.status_code == 200:
             return res
         else:
-            raise ConnectionError("Error while calling: " + url)
+            raise ConnectionError([
+                "Error while calling: " + url,
+                res
+            ])
             return False

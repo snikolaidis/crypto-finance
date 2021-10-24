@@ -1,4 +1,5 @@
-import json
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from lib import globals
 
 class Tools:
@@ -27,46 +28,6 @@ class Tools:
     def getExchangeRatesAPIKey(self):
         return globals.database.getOptionsValue('exchangeratesapi')
 
-    def updatePricesFromNomics(self):
-        nomicsKey = self.getNomicsKey()
-        if nomicsKey == None:
-            return False
-
-        # Get list of coins
-        coinList = ''
-        rows = globals.db_schema.execSelect("SELECT coin_code FROM list_of_coins")
-        for row in rows:
-            if coinList == '':
-                coinList = row[0]
-            else:
-                coinList = coinList + "," + row[0]
-
-        res = globals.network.callGet("https://api.nomics.com/v1/currencies/ticker?ids=" + coinList + "&interval=1d,30d&convert=USD&per-page=100&page=1&key=" + nomicsKey)
-        if res:
-            data = json.loads(res.text)
-            for coin in data:
-                rank = 999
-                try:
-                    rank = coin['rank']
-                except:
-                    pass
-                globals.database.setCoinInformation(coin['currency'], coin['price'], coin['price_date'], rank)
-
-        return True
-
-    def updateFiatFromExchangeRatesAPI(self):
-        exchangeRatesAPIKey = self.getExchangeRatesAPIKey()
-        if exchangeRatesAPIKey == None:
-            return False
-
-        res = globals.network.callGet("http://api.exchangeratesapi.io/v1/latest?format=1&access_key=" + exchangeRatesAPIKey)
-        if res:
-            data = json.loads(res.text)
-            globals.database.setOptionsValue('usd_eur', 1 / data['rates']['USD'])
-            return 1 / data['rates']['USD']
-
-        return False
-    
     def getTheMonthFromShort(self, month):
         month = month.lower()
         months = {
@@ -137,3 +98,24 @@ class Tools:
             return "{:,.2f}".format(price)
         else:
             return "{:,.f}".format(price)
+
+    def getDateFromString(self, strDate):
+        return datetime.fromisoformat(self.clearDateIsoFormat(strDate))
+
+    def clearDateIsoFormat(self, strDate):
+        return strDate.replace("Z", "")
+
+    def firstDayOfTheMonth(self, date):
+        return datetime(date.year, date.month, 1)
+
+    def lastDayOfTheMonth(self, date):
+        newDay = datetime(date.year, date.month, 1) + relativedelta(months=+1, days=-1)
+        return newDay
+
+    def getNextMonth(self, date):
+        newDay = datetime(date.year, date.month, date.day) + relativedelta(months=+1)
+        return newDay
+
+    def getPreviousMonth(self, date):
+        newDay = datetime(date.year, date.month, date.day) + relativedelta(months=-1)
+        return newDay

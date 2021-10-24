@@ -15,6 +15,7 @@ from lib import tools
 from lib import network
 from lib import scrapers
 from lib import nft
+from lib import fintools
 
 def initTheLibraries():
     globals.db_schema = db_schema.DB_Schema()
@@ -25,6 +26,7 @@ def initTheLibraries():
     globals.network = network.Network()
     globals.scrapers = scrapers.Scrapers()
     globals.nft = nft.Nft()
+    globals.fintools = fintools.FinTools()
 
 def main():
     globals.misc.doTheMenuLoop()
